@@ -5,6 +5,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * 协程切换
+ */
 class ThreadUtils {
     companion object {
         fun thread(): CoroutineScope {

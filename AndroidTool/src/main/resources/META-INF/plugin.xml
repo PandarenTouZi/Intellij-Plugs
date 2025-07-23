@@ -27,7 +27,12 @@
 
     </extensions>
     <actions>
-        <action id="com.android.tool.EntranceAction" class="com.android.tool.EntranceAction"
+        <action id="com.android.tool.action.ADBDetailAction" class="com.android.tool.action.ADBDetailAction"
+                text="Commands" description="Details of adb command">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl W"/>
+        </action>
+        <action id="com.android.tool.action.EntranceAction" class="com.android.tool.action.EntranceAction"
                 text="AdbTools" description="It&#39;s the main enter.">
             <!--入口方式-右键编辑-->
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>

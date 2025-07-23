@@ -1,6 +1,6 @@
 package com.android.tool.dialog
 
-import com.android.tool.EntranceAction.ADBDeviceEntity
+import com.android.tool.action.EntranceAction.ADBDeviceEntity
 import com.intellij.openapi.ui.ComboBox
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
