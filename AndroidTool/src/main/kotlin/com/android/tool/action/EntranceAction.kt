@@ -48,7 +48,7 @@ class EntranceAction : AnAction() {
      */
     private fun readAdbDeviceList(): List<ADBDeviceEntity>? {
         try {
-            Runtime.getRuntime().exec(arrayOf("adb", "devices", "-l"), null)?.also { process ->
+            Runtime.getRuntime().exec(CommandConfig.DEVICES_LIST, null)?.also { process ->
                 if (process.isAlive) {
                     val stream = process.inputStream
                     val writer = BufferedReader(InputStreamReader(stream))
@@ -56,7 +56,7 @@ class EntranceAction : AnAction() {
                     run readLoop@{
                         writer.readLines().forEach { line ->
                             if (line.isNotEmpty()) {
-                                if (!line.startsWith("line List of devices attached", true)) {
+                                if (!line.startsWith(CommandConfig.DEVICES_LIST_START, true)) {
                                     //eg:JTK5T19910001215       device product:TAS-AL00 model:TAS_AL00 device:HWTAS transport_id:1
                                     val split = line.split(" ")
                                     if (split.size > 5) {
