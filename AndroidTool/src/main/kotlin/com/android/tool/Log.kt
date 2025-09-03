@@ -13,5 +13,15 @@ class Log {
         fun print(tag: String, string: String) {
             println("${Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())}     $tag    $string")
         }
+
+        fun printErrorStream(process: Process) {
+            process.errorReader()?.also {
+                var line = it.readLine()
+                while (line != null) {
+                    print("-------$line")
+                    line = it.readLine()
+                }
+            }
+        }
     }
 }

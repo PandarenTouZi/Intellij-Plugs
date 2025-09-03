@@ -24,8 +24,10 @@ interface CommandConfig {
 
         /**
          * 当前前台的进程
+         * Linux and macOS:grep
+         * Windows:findstr
          */
-        val CURRENT_RUNNING_TASK = arrayOf("adb", "shell", "dumpsys", "window", "|", "grep", "mFocusedActivity")
+        fun currentRunningTask(devices: String) = arrayOf("adb", "-s", devices, "shell", "dumpsys", "window", "|", "grep", "mCurrentFocus")
 
         /**
          * 错误日志

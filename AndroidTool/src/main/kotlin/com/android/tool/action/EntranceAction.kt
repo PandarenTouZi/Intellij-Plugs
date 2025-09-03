@@ -121,6 +121,9 @@ class EntranceAction : AnAction() {
         return null
     }
 
+    /**
+     * 选择设备面板
+     */
     private fun createChooseDeviceDialog(list: List<ADBDeviceEntity>) {
         Log.Companion.print("EntranceAction.createChooseDeviceDialog   ${list.size}")
         ADBDeviceChooseDialog(list).apply {
@@ -132,10 +135,63 @@ class EntranceAction : AnAction() {
         }.showAndGet()
     }
 
+    /**
+     * 选中设备变更
+     */
     private fun setDeviceChanged(entity: ADBDeviceEntity) {
-        if (Companion.entity != entity) {
+//        if (Companion.entity != entity) {
             Companion.entity = entity
             BaseNotification.Companion.notifyE("连接的设备", "已选择新的设备：$entity")
+
+            //默认选择当前前台进程
+            parseFrontProcess(entity)
+//        }
+    }
+
+    /**
+     * 解析指定设备当前前台线程
+     */
+    private fun parseFrontProcess(entity: ADBDeviceEntity) {
+        var parsedProcessName: String? = null
+        try {
+            Runtime.getRuntime().exec(CommandConfig.currentRunningTask(entity.serial), null)?.also { process ->
+                if (process.isAlive) {
+                    val stream = process.inputStream
+                    val writer = BufferedReader(InputStreamReader(stream))
+                    /*
+                     * mCurrentFocus=Window{30df065 u0 com.heartgo.loong/com.heartgo.loong.QniActivity} √
+                     * mFocusedApp=ActivityRecord{9b25034 u0 com.heartgo.loong/.QniActivity t250}
+                     * mFocusedWindow=Window{30df065 u0 com.heartgo.loong/com.heartgo.loong.QniActivity}
+                     */
+                    writer.readLines().forEach { line ->
+                        println("EntranceAction.parseFrontProcess  line:$line")
+                        if (line.isNotEmpty()) {
+                            val startIndex = line.indexOf("{")
+                            if (startIndex >= 0) {
+                                val splits = line.substring(startIndex, line.length - 1).split(" ")
+                                splits.forEach {
+                                    if (it.contains("/")) {
+                                        val substring = it.substring(0, it.indexOf("/"))
+                                        if (parsedProcessName == null || parsedProcessName != substring) {
+                                            parsedProcessName = substring
+                                        }
+                                        return@forEach
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Log.printErrorStream(process)
+                    if (parsedProcessName.isNullOrEmpty()) {
+                        BaseNotification.notifyE("获取失败", "获取当前运行app进程失败")
+                    } else {
+                        packageName = parsedProcessName
+                        BaseNotification.notifyE("获取成功", "获取当前运行app进程：$packageName")
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            Log.Companion.print("EntranceAction.actionPerformed  ${e.toString()}  ${Thread.currentThread()}")
         }
     }
 
@@ -166,7 +222,7 @@ class EntranceAction : AnAction() {
     ) {
         override fun toString(): String {
 //            return "[${super.toString()}], serial:$serial, product:$product, model:$model, device:$device, transportId:$transportId"
-            return "$model ($serial)"
+            return "$model ($serial devices:$device)"
         }
     }
 }

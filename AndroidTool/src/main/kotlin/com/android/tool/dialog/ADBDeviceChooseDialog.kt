@@ -26,21 +26,19 @@ class ADBDeviceChooseDialog() : BaseDialog() {
     override fun createCenterPanel(): JComponent? {
         list?.also { li ->
             val panel = JPanel(BorderLayout())
-            _comboBox = ComboBox(li.toTypedArray()).apply {
-                this.addActionListener(object : ActionListener {
-                    override fun actionPerformed(e: ActionEvent?) {
-                        println("ADBDeviceChooseDialog.actionPerformed $e")
-                        val item = _comboBox?.selectedItem
-                        if (item is ADBDeviceEntity) {
-                            onSelectListener?.onSelect(item)
-                        }
-                    }
-                })
-            }
+            _comboBox = ComboBox(li.toTypedArray())
             panel.add(_comboBox, BorderLayout.CENTER)
             return panel
         }
         return null
+    }
+
+    override fun doOKAction() {
+        super.doOKAction()
+        val item = _comboBox?.selectedItem
+        if (item is ADBDeviceEntity) {
+            onSelectListener?.onSelect(item)
+        }
     }
 
     fun setOnSelectListener(onSelectListener: OnSelectListener) {
