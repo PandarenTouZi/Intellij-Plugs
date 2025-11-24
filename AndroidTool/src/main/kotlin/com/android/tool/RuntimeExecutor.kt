@@ -1,0 +1,58 @@
+package com.android.tool
+
+import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
+class RuntimeExecutor {
+    companion object {
+        fun execute(cmdArray: Array<String>, callback: IExecuteCallback?) {
+            ThreadUtils.threadIO().launch {
+                try {
+                    Runtime.getRuntime().exec(cmdArray, null)?.also { process ->
+                        if (process.isAlive) {
+                            val stream = process.inputStream
+                            val writer = BufferedReader(InputStreamReader(stream))
+                            var hasResult = false
+                            val readLines = writer.readLines()
+                            val size = readLines.size
+                            readLines.forEachIndexed { index, line ->
+                                hasResult = true
+                                println("inputStream  line:$line")
+                                callback?.onExecuteSuccess(line, size == index + 1)
+                            }
+                            if (!hasResult) {
+                                process.errorReader()?.also {
+                                    var line = it.readLine()
+                                    while (line != null) {
+                                        callback?.onExecuteFail(line)
+                                        line = it.readLine()
+                                    }
+                                }
+                            }
+                        } else {
+                            callback?.onExecuteFail("Exception: process had been terminated.")
+                        }
+                    }
+                } catch (ignore: Exception) {
+                    callback?.onExecuteFail("Exception: $ignore")
+                }
+            }
+        }
+    }
+
+    /**
+     * 线程执行结果
+     */
+    interface IExecuteCallback {
+        /**
+         * @WorkThread
+         */
+        fun onExecuteSuccess(result: String, isLastLine: Boolean)
+
+        /**
+         * @WorkThread
+         */
+        fun onExecuteFail(result: String)
+    }
+}

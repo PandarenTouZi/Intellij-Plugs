@@ -48,5 +48,20 @@ interface CommandConfig {
          * 卸载
          */
         fun uninstall(devices: String, process: String) = arrayOf("adb", "-s", devices, "uninstall", process)
+
+        /**
+         * 当前显示的Activity
+         */
+        fun locateCurrentActivity(devices: String) = arrayOf("adb", "-s", devices, "shell", "dumpsys", "activity", "activities", "|", "grep", "mResumedActivity")
+
+        /**
+         * 当前显示的Dialog
+         */
+        fun locateCurrentDialog(devices: String) = arrayOf("adb", "-s", devices, "shell", "dumpsys", "window", "windows", "| grep -E mCurrentFocus")
+
+        /**
+         * 当前显示的Fragment
+         */
+        fun locateCurrentFragment(devices: String, activityName: String) = arrayOf("adb", "-s", devices, "shell", "dumpsys", "activity", activityName)
     }
 }
