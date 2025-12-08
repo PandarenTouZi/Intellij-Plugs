@@ -140,18 +140,18 @@ class EntranceAction : AnAction() {
      */
     private fun setDeviceChanged(entity: ADBDeviceEntity) {
 //        if (Companion.entity != entity) {
-            Companion.entity = entity
-            BaseNotification.Companion.notifyE("连接的设备", "已选择新的设备：$entity")
+        Companion.entity = entity
+        BaseNotification.Companion.notifyE("连接的设备", "已选择新的设备：$entity")
 
-            //默认选择当前前台进程
-            parseFrontProcess(entity)
+        //默认选择当前前台进程
+        parseFrontProcess(entity, null)
 //        }
     }
 
     /**
      * 解析指定设备当前前台线程
      */
-    private fun parseFrontProcess(entity: ADBDeviceEntity) {
+    fun parseFrontProcess(entity: ADBDeviceEntity, completeBlock: (() -> Unit)?) {
         var parsedProcessName: String? = null
         try {
             Runtime.getRuntime().exec(CommandConfig.currentRunningTask(entity.serial), null)?.also { process ->
@@ -188,10 +188,12 @@ class EntranceAction : AnAction() {
                         packageName = parsedProcessName
                         BaseNotification.notifyE("获取成功", "获取当前运行app进程：$packageName")
                     }
+                    completeBlock?.invoke()
                 }
             }
         } catch (e: IOException) {
             Log.Companion.print("EntranceAction.actionPerformed  ${e.toString()}  ${Thread.currentThread()}")
+            completeBlock?.invoke()
         }
     }
 

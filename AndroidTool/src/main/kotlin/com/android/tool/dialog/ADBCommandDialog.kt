@@ -1,12 +1,14 @@
 package com.android.tool.dialog
 
 import com.android.tool.RuntimeExecutor
+import com.android.tool.ThreadUtils
 import com.android.tool.action.CommandConfig
 import com.android.tool.action.EntranceAction
 import com.android.tool.action.EntranceAction.ADBDeviceEntity
 import com.android.tool.effect.select
 import com.android.tool.notify.BaseNotification
 import com.intellij.openapi.ui.ComboBox
+import kotlinx.coroutines.launch
 import java.awt.BorderLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -93,13 +95,22 @@ class ADBCommandDialog : BaseDialog {
         CommandConfig.locateCurrentFragment(serial, activity)
 
     override fun doOKAction() {
-        EntranceAction.entity?.also { entity ->
+        EntranceAction.entity?.also { deviceEntity ->
             val text = EntranceAction.packageName ?: _textField?.text
             if (text.isNullOrEmpty()) {
-                BaseNotification.notifyE("操作失败", "包名为空")
+                EntranceAction().parseFrontProcess(deviceEntity) {
+                    EntranceAction.packageName.also { packageName ->
+                        if (packageName.isNullOrEmpty()) {
+                            BaseNotification.notifyE("操作失败", "包名为空")
+                            doCancelAction()
+                        } else {
+                            doCommandClick(comboBox?.selectedItem, EntranceAction.entity ?: return@parseFrontProcess)
+                        }
+                    }
+                }
             } else {
                 val selectedItem = comboBox?.selectedItem
-                doCommandClick(selectedItem, entity)
+                doCommandClick(selectedItem, deviceEntity)
             }
         }
     }
@@ -204,6 +215,10 @@ class ADBCommandDialog : BaseDialog {
                     if (isProcessed == true) {
                         BaseNotification.notifyI(selectedItem.name, "操作成功: $appendMsg")
                         appendMsg = ""
+                        //操作成功关闭命令提示选择提示框
+                        ThreadUtils.threadMain().launch {
+                            doCancelAction()
+                        }
                     } else if (isProcessed == false) {
                         BaseNotification.notifyE(selectedItem.name, "操作失败. $result . $appendMsg")
                         appendMsg = ""
