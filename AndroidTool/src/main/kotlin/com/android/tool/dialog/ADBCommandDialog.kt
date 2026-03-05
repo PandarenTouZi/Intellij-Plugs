@@ -129,13 +129,16 @@ class ADBCommandDialog : BaseDialog {
             RuntimeExecutor.execute(command, object : RuntimeExecutor.IExecuteCallback {
                 private var isResultValid = false
                 private var appendMsg: String = ""
-                override fun onExecuteSuccess(result: String, isLastLine: Boolean) {
+                override fun onExecuteSuccess(result: String, isLastLine: Boolean): Boolean? {
+                    var needContinueProcess = true
                     val isProcessed: Boolean? = when (selectedItem.name) {
                         mCommandTypeUninstall -> {
+                            needContinueProcess = false
                             true
                         }
 
                         mCommandTypeClean -> {
+                            needContinueProcess = false
                             true
                         }
 
@@ -148,6 +151,7 @@ class ADBCommandDialog : BaseDialog {
                                     val activityName =
                                         result.substring(indexOfActivityStart + 2, indexOfActivityEnd)
                                     if (activityName.isNotEmpty()) {
+                                        needContinueProcess = false
                                         getActivity = true
                                         appendMsg = activityName
                                     }
@@ -172,6 +176,7 @@ class ADBCommandDialog : BaseDialog {
                                     }
                                 }
                                 if (getActivity) {
+                                    needContinueProcess = false
                                     val copy = selectedItem.copy()
                                     copy.status = appendMsg
                                     appendMsg = ""
@@ -181,21 +186,21 @@ class ADBCommandDialog : BaseDialog {
                                     false
                                 }
                             } else {
+                                val lastResultValid = isResultValid
                                 //解析Fragment
                                 if (result.endsWith("Added Fragments:")) {
                                     isResultValid = true
-                                } else if (result.contains(Regex("#[0-9]+:*"))) {
-                                    if (isResultValid) {
-                                        val indexOfFragmentStart = result.indexOf(":")
-                                        val indexOfFragmentEnd = result.indexOf("{")
-                                        if (indexOfFragmentStart >= 0 && indexOfFragmentEnd > indexOfFragmentStart) {
-                                            appendMsg += result.substring(indexOfFragmentStart + 1, indexOfFragmentEnd)
-                                        }
+                                } else if (isResultValid && result.contains(Regex("#[0-9]+:*"))) {
+                                    val indexOfFragmentStart = result.indexOf(":")
+                                    val indexOfFragmentEnd = result.indexOf("{")
+                                    if (indexOfFragmentStart >= 0 && indexOfFragmentEnd > indexOfFragmentStart) {
+                                        appendMsg += result.substring(indexOfFragmentStart + 1, indexOfFragmentEnd)
                                     }
                                 } else {
                                     isResultValid = false
                                 }
-                                if (isLastLine) {
+                                if (isLastLine || lastResultValid && !isResultValid) {
+                                    needContinueProcess = false
                                     BaseNotification.notifyI(selectedItem.name, "操作成功: $appendMsg")
                                     true
                                 } else {
@@ -205,6 +210,7 @@ class ADBCommandDialog : BaseDialog {
                         }
 
                         mCommandTypeDialog -> {
+                            needContinueProcess = false
                             true
                         }
 
@@ -223,6 +229,7 @@ class ADBCommandDialog : BaseDialog {
                         BaseNotification.notifyE(selectedItem.name, "操作失败. $result . $appendMsg")
                         appendMsg = ""
                     }
+                    return needContinueProcess
                 }
 
                 override fun onExecuteFail(result: String) {

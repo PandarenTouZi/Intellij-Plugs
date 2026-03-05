@@ -52,7 +52,7 @@ interface CommandConfig {
         /**
          * 当前显示的Activity
          */
-        fun locateCurrentActivity(devices: String) = arrayOf("adb", "-s", devices, "shell", "dumpsys", "activity", "activities", "|", "grep", "mResumedActivity")
+        fun locateCurrentActivity(devices: String) = arrayOf("adb", "-s", devices, "shell", "dumpsys", "activity", "activities", "|", "grep", "ResumedActivity")
 
         /**
          * 当前显示的Dialog

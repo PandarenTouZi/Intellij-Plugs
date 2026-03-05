@@ -155,7 +155,7 @@ class EntranceAction : AnAction() {
         var parsedProcessName: String? = null
         try {
             Runtime.getRuntime().exec(CommandConfig.currentRunningTask(entity.serial), null)?.also { process ->
-                if (process.isAlive) {
+                if (process.isAlive || process.exitValue() == 0) {
                     val stream = process.inputStream
                     val writer = BufferedReader(InputStreamReader(stream))
                     /*
@@ -189,6 +189,8 @@ class EntranceAction : AnAction() {
                         BaseNotification.notifyE("获取成功", "获取当前运行app进程：$packageName")
                     }
                     completeBlock?.invoke()
+                } else {
+                    Log.printErrorStream(process)
                 }
             }
         } catch (e: IOException) {

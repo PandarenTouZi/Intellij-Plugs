@@ -16,10 +16,14 @@ class RuntimeExecutor {
                             var hasResult = false
                             val readLines = writer.readLines()
                             val size = readLines.size
-                            readLines.forEachIndexed { index, line ->
-                                hasResult = true
-                                println("inputStream  line:$line")
-                                callback?.onExecuteSuccess(line, size == index + 1)
+                            run loop@{
+                                readLines.forEachIndexed { index, line ->
+                                    hasResult = true
+                                    println("inputStream  line:$line")
+                                    if (callback?.onExecuteSuccess(line, size == index + 1) != true) {
+                                        return@loop
+                                    }
+                                }
                             }
                             if (!hasResult) {
                                 process.errorReader()?.also {
@@ -48,7 +52,7 @@ class RuntimeExecutor {
         /**
          * @WorkThread
          */
-        fun onExecuteSuccess(result: String, isLastLine: Boolean)
+        fun onExecuteSuccess(result: String, isLastLine: Boolean): Boolean?
 
         /**
          * @WorkThread
