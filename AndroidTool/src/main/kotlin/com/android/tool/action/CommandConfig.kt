@@ -2,6 +2,12 @@ package com.android.tool.action
 
 interface CommandConfig {
     companion object {
+
+        const val COMMAND_TYPE_UNINSTALL = "uninstall"
+        const val COMMAND_TYPE_CLEAN = "clean"
+        const val COMMAND_TYPE_ACTIVITY = "activity"
+        const val COMMAND_TYPE_DIALOG = "dialog"
+        const val COMMAND_TYPE_FRAGMENT = "fragment"
         /**
          * 设备列表
          */

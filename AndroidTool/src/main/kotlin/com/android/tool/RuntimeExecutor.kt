@@ -9,6 +9,7 @@ class RuntimeExecutor {
         fun execute(cmdArray: Array<String>, callback: IExecuteCallback?) {
             ThreadUtils.threadIO().launch {
                 try {
+                    println("RuntimeExecutor.execute  ${cmdArray.contentToString()}")
                     Runtime.getRuntime().exec(cmdArray, null)?.also { process ->
                         if (process.isAlive) {
                             val stream = process.inputStream
@@ -26,12 +27,17 @@ class RuntimeExecutor {
                                 }
                             }
                             if (!hasResult) {
+                                var hasErrorResult = false
                                 process.errorReader()?.also {
                                     var line = it.readLine()
                                     while (line != null) {
+                                        hasErrorResult = true
                                         callback?.onExecuteFail(line)
                                         line = it.readLine()
                                     }
+                                }
+                                if (!hasErrorResult) {
+                                    callback?.onExecuteFail("")
                                 }
                             }
                         } else {
