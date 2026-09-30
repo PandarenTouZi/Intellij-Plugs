@@ -63,9 +63,13 @@
         </action>
 
 
-        <action id="com.android.tool.action.Other" class="com.android.tool.entrance.Entrance"
-                text="Other" description="Tools of Development!">
-            <add-to-group group-id="Group.Other" anchor="first"/>
+        <action id="com.android.tool.action.Other.Type" class="com.android.tool.action.other.PowerShellType"
+                text="FileType" description="Tools of Development!">
+            <add-to-group group-id="Group.Other"/>
+        </action>
+        <action id="com.android.tool.action.Other.Head" class="com.android.tool.action.other.PowerShellHead"
+                text="FileHead" description="Tools of Development!">
+            <add-to-group group-id="Group.Other"/>
         </action>
         <!--<action id="com.android.tool.action.ADBDetailAction" class="com.android.tool.action.ADBDetailAction"
                 text="Commands" description="Details of adb command">
