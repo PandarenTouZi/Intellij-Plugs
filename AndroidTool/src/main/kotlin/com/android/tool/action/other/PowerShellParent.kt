@@ -31,6 +31,7 @@ abstract class PowerShellParent : AnAction() {
                 line = bufferedReader.readLine()
                 var result: String? = null
                 while (line != null) {
+                    //过滤
                     if (line != "#< CLIXML" && !line.startsWith("<Objs Version=")) {
                         println("PowerShellParent.actionPerformed line:$line")
                         result = line

@@ -12,7 +12,8 @@
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description><![CDATA[This is a personal tool.<br>No other usage]]></description>
+    <description>It's a tool to help android development!
+        <![CDATA[This is a personal tool.<br>No other usage]]></description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
