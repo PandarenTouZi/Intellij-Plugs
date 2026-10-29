@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.android"
-version = "1.2"
+version = "1.4"
 
 repositories {
     mavenCentral()
@@ -35,7 +35,8 @@ intellijPlatform {
         }
 
         changeNotes = """
-      Initial version
+            version 1.4
+      update action id unique.
     """.trimIndent()
     }
 }

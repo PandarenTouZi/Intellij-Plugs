@@ -25,52 +25,53 @@
 
     </extensions>
     <actions>
-        <group id="Group" text="Android Tools" description="Android options!" popup="true">
-            <group id="Group.Android" text="Android Menu" popup="true">
-                <group id="Group.Android.Refresh" text="Refresh" popup="true" compact="true" />
+        <group id="com.android.tool.Group" text="Android Tools" description="Android options!" popup="true">
+            <group id="com.android.tool.Group.Android" text="Android Menu" popup="true">
+                <group id="com.android.tool.Group.Android.Refresh" text="Refresh" popup="true"/>
             </group>
-            <group id="Group.Other" text="Other Menu" popup="true"/>
+            <group id="com.android.tool.Group.Other" text="Other Menu" popup="true"/>
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </group>
 
 
-        <action id="Uninstall" class="com.android.tool.action.android.Uninstall"
+        <action id="com.android.tool.Uninstall" class="com.android.tool.action.android.Uninstall"
                 text="Uninstall" description="Tools of Development!">
-            <add-to-group group-id="Group.Android"/>
+            <add-to-group group-id="com.android.tool.Group.Android"/>
         </action>
-        <action id="Clean" class="com.android.tool.action.android.Clean"
+
+        <action id="com.android.tool.Clean" class="com.android.tool.action.android.Clean"
                 text="Clean" description="Tools of Development!">
-            <add-to-group group-id="Group.Android"/>
+            <add-to-group group-id="com.android.tool.Group.Android"/>
         </action>
-        <action id="Activity" class="com.android.tool.action.android.Activity"
+        <action id="com.android.tool.Activity" class="com.android.tool.action.android.Activity"
                 text="Activity" description="Tools of Development!">
-            <add-to-group group-id="Group.Android"/>
+            <add-to-group group-id="com.android.tool.Group.Android"/>
         </action>
-        <action id="Fragment" class="com.android.tool.action.android.Fragment"
+        <action id="com.android.tool.Fragment" class="com.android.tool.action.android.Fragment"
                 text="Fragment" description="Tools of Development!">
-            <add-to-group group-id="Group.Android"/>
+            <add-to-group group-id="com.android.tool.Group.Android"/>
         </action>
-        <action id="Dialog" class="com.android.tool.action.android.Dialog"
+        <action id="com.android.tool.Dialog" class="com.android.tool.action.android.Dialog"
                 text="Dialog" description="Tools of Development!">
-            <add-to-group group-id="Group.Android"/>
+            <add-to-group group-id="com.android.tool.Group.Android"/>
         </action>
-        <action id="Device" class="com.android.tool.action.android.Device"
+        <action id="com.android.tool.Device" class="com.android.tool.action.android.Device"
                 text="Refresh Device" description="Tools of Development!">
-            <add-to-group group-id="Group.Android.Refresh"/>
+            <add-to-group group-id="com.android.tool.Group.Android.Refresh"/>
         </action>
-        <action id="Process" class="com.android.tool.action.android.Process"
+        <action id="com.android.tool.Process" class="com.android.tool.action.android.Process"
                 text="Refresh Process" description="Tools of Development!">
-            <add-to-group group-id="Group.Android.Refresh"/>
+            <add-to-group group-id="com.android.tool.Group.Android.Refresh"/>
         </action>
 
 
-        <action id="com.android.tool.action.Other.Type" class="com.android.tool.action.other.PowerShellType"
+        <action id="com.android.tool.Other.Type" class="com.android.tool.action.other.PowerShellType"
                 text="FileType" description="Tools of Development!">
-            <add-to-group group-id="Group.Other"/>
+            <add-to-group group-id="com.android.tool.Group.Other"/>
         </action>
-        <action id="com.android.tool.action.Other.Head" class="com.android.tool.action.other.PowerShellHead"
+        <action id="com.android.tool.Other.Head" class="com.android.tool.action.other.PowerShellHead"
                 text="FileHead" description="Tools of Development!">
-            <add-to-group group-id="Group.Other"/>
+            <add-to-group group-id="com.android.tool.Group.Other"/>
         </action>
         <!--<action id="com.android.tool.action.ADBDetailAction" class="com.android.tool.action.ADBDetailAction"
                 text="Commands" description="Details of adb command">
